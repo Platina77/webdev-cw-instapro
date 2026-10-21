@@ -1,4 +1,6 @@
-import { renderUploadImageComponent } from "./upload-image-component";
+import { renderUploadImageComponent } from "./upload-image-component.js";
+
+let imageUrl = "";
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
@@ -7,6 +9,8 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     <div class="page-container">
       <div class="header-container"></div>
       Cтраница добавления поста
+      <br>
+      <br>
       <textarea id="post-description"></textarea>
       <div id="add-container"></div>
       <button class="button" id="add-button">Добавить</button>
@@ -17,12 +21,18 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
     const addContainerEl = document.getElementById("add-container");
 
-    renderUploadImageComponent({ element: addContainerEl, onImageUrlChange });
+    renderUploadImageComponent({
+      element: addContainerEl,
+      onImageUrlChange(newImageUrl) {
+        imageUrl = newImageUrl;
+      },
+    });
 
     document.getElementById("add-button").addEventListener("click", () => {
+      const description = document.getElementById("post-description").value;
       onAddPostClick({
-        description: "Описание картинки",
-        imageUrl: "https://image.png",
+        description: description,
+        imageUrl: imageUrl,
       });
     });
   };
