@@ -91,6 +91,52 @@ export function addPost({ token, description, imageUrl }) {
 }
 
 //Ставим лайк
-export function addLike({ token }) {
-  return fetch(postsHost + "/:id/like");
+export function addLike({ token, id }) {
+  return fetch(`${postsHost}/${id}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        /*       if (response.status === 400) {
+        throw new Error("не передано описание, фотография или описание пустое");
+      } */
+        if (response.status === 401) {
+          throw new Error("Авторизуйтесь, пожалуйста");
+        }
+        throw new Error("Ошибка сервера");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}
+
+//Убираем лайк
+export function dislike({ token, id }) {
+  return fetch(`${postsHost}/${id}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        if (response.status === 401) {
+          throw new Error("Авторизуйтесь, пожалуйста");
+        }
+        throw new Error("Ошибка сервера");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
+}
+
+export function getUserPosts({ token, id }) {
+  return fetch(`${postsHost}/user-posts/${id}`, {});
 }

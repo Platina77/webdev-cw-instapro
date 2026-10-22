@@ -1,8 +1,9 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { posts, goToPage, getToken, user } from "../index.js";
+import { addLike, dislike } from "../api.js";
 
-export function renderPostsPageComponent({ appEl }) {
+export function renderPostsPageComponent({ appEl, userId = null }) {
   // @TODO: реализовать рендер постов из api
 
   console.log("Актуальный список постов:", posts);
@@ -57,4 +58,47 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+
+  const likeButtonsEl = document.querySelectorAll(".like-button");
+
+  likeButtonsEl.forEach((likeButtonEl) => {
+    likeButtonEl.addEventListener("click", () => {
+      const postLikesEl = likeButtonEl.closest(".post-likes");
+
+      const id = likeButtonEl.dataset.postId;
+      const img = likeButtonEl.querySelector("img");
+
+      const countLikes = postLikesEl.querySelector("strong");
+
+      const currentPost = posts.find((post) => {
+        return post.id === id;
+      });
+
+      if (currentPost.isLiked) {
+        dislike({ token: getToken(), id: id })
+          .then((post) => {
+            img.src = "./assets/images/like-not-active.svg";
+            countLikes.textContent = post.likes.length;
+            currentPost.isLiked = post.isLiked;
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      } else {
+        addLike({
+          token: getToken(),
+          id: id,
+        })
+          .then((post) => {
+            img.src = "./assets/images/like-active.svg";
+            countLikes.textContent = post.likes.length;
+            currentPost.isLiked = post.isLiked;
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      }
+    });
+  });
 }
+/* console.log(likeButtonEl); */
