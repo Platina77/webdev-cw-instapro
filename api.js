@@ -138,5 +138,11 @@ export function dislike({ token, id }) {
 }
 
 export function getUserPosts({ token, id }) {
-  return fetch(`${postsHost}/user-posts/${id}`, {});
+  return fetch(`${postsHost}/user-posts/${id}`, {
+    method: "GET",
+
+    headers: {
+      Authorization: token,
+    },
+  });
 }
