@@ -71,11 +71,14 @@ export const goToPage = (newPage, data) => {
       page = LOADING_PAGE;
       renderApp();
 
-      return getUserPosts({ token: getToken(), id });
-      console.log("Открываю страницу пользователя: ", id);
-      page = USER_POSTS_PAGE;
-      posts = [];
-      return renderApp();
+      return getUserPosts({ token: getToken(), id: data.userId }).then(
+        (newPosts) => {
+          console.log("Открываю страницу пользователя: ", data.userId);
+          page = USER_POSTS_PAGE;
+          posts = newPosts;
+          renderApp();
+        },
+      );
     }
 
     page = newPage;
@@ -136,8 +139,8 @@ const renderApp = () => {
 
   if (page === USER_POSTS_PAGE) {
     // @TODO: реализовать страницу с фотографиями отдельного пользвателя
-    appEl.innerHTML = "Здесь будет страница фотографий пользователя";
-    return;
+
+    return renderPostsPageComponent({ appEl });
   }
 };
 

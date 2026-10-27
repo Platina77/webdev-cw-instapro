@@ -138,11 +138,23 @@ export function dislike({ token, id }) {
 }
 
 export function getUserPosts({ token, id }) {
+  const headers = {};
+
+  if (token !== undefined) {
+    headers.Authorization = token;
+  }
   return fetch(`${postsHost}/user-posts/${id}`, {
     method: "GET",
 
-    headers: {
-      Authorization: token,
-    },
-  });
+    headers,
+  })
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error("Ошибка сервера");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
 }
