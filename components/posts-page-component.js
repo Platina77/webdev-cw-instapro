@@ -63,40 +63,44 @@ export function renderPostsPageComponent({ appEl, userId = null }) {
 
   likeButtonsEl.forEach((likeButtonEl) => {
     likeButtonEl.addEventListener("click", () => {
-      const postLikesEl = likeButtonEl.closest(".post-likes");
+      if (getToken()) {
+        const postLikesEl = likeButtonEl.closest(".post-likes");
 
-      const id = likeButtonEl.dataset.postId;
-      const img = likeButtonEl.querySelector("img");
+        const id = likeButtonEl.dataset.postId;
+        const img = likeButtonEl.querySelector("img");
 
-      const countLikes = postLikesEl.querySelector("strong");
+        const countLikes = postLikesEl.querySelector("strong");
 
-      const currentPost = posts.find((post) => {
-        return post.id === id;
-      });
+        const currentPost = posts.find((post) => {
+          return post.id === id;
+        });
 
-      if (currentPost.isLiked) {
-        dislike({ token: getToken(), id: id })
-          .then((post) => {
-            img.src = "./assets/images/like-not-active.svg";
-            countLikes.textContent = post.likes.length;
-            currentPost.isLiked = post.isLiked;
+        if (currentPost.isLiked) {
+          dislike({ token: getToken(), id: id })
+            .then((post) => {
+              img.src = "./assets/images/like-not-active.svg";
+              countLikes.textContent = post.likes.length;
+              currentPost.isLiked = post.isLiked;
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        } else {
+          addLike({
+            token: getToken(),
+            id: id,
           })
-          .catch((error) => {
-            alert(error.message);
-          });
+            .then((post) => {
+              img.src = "./assets/images/like-active.svg";
+              countLikes.textContent = post.likes.length;
+              currentPost.isLiked = post.isLiked;
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        }
       } else {
-        addLike({
-          token: getToken(),
-          id: id,
-        })
-          .then((post) => {
-            img.src = "./assets/images/like-active.svg";
-            countLikes.textContent = post.likes.length;
-            currentPost.isLiked = post.isLiked;
-          })
-          .catch((error) => {
-            alert(error.message);
-          });
+        alert("Чтобы поставить лайк, необходимо авторизоваться");
       }
     });
   });

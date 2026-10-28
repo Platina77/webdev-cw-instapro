@@ -82,7 +82,7 @@ export function addPost({ token, description, imageUrl }) {
         throw new Error("не передано описание, фотография или описание пустое");
       }
       if (response.status === 401) {
-        throw new Error("Авторизуйтесь, пожалуйста");
+        throw new Error("Пользователь не авторизован");
       }
       throw new Error("Ошибка сервера");
     }

@@ -31,6 +31,10 @@ export const logout = () => {
   goToPage(POSTS_PAGE);
 };
 
+export const onBackToPostsClick = () => {
+  goToPage(POSTS_PAGE);
+};
+
 /**
  * Включает страницу приложения
  */
