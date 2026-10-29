@@ -1,3 +1,4 @@
+import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 
 let imageUrl = "";
@@ -18,6 +19,10 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   `;
 
     appEl.innerHTML = appHtml;
+
+    renderHeaderComponent({
+      element: document.querySelector(".header-container"),
+    });
 
     const addContainerEl = document.getElementById("add-container");
 

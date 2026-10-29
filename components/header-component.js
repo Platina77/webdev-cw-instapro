@@ -28,7 +28,7 @@ export function renderHeaderComponent({ element }) {
       }
       </button>
       ${
-        page === USER_POSTS_PAGE
+        page !== POSTS_PAGE
           ? `<button class="header-button back-button">Назад к ленте</button>`
           : ""
       }  
